@@ -20,34 +20,27 @@ namespace CloudantTest
             var user = "55bd2041-ef4a-4dec-8bc1-b4aa8871b38f-bluemix";
             var password = "cbcdf64595e4ed9d5546e7f9761a03153c3246d97458734c58cfef0f7b06da63";
             var database = "database";
-
-           
-
-
-
             var handler = new HttpClientHandler { Credentials = new NetworkCredential(user, password) };
 
             using (var client = CreateHttpClient(handler, user, database))
             {
 
-                string GetAllResponse = GetAll(client);
+                string GetAllResponse = GetAll(client);//Query for all docs
                 Console.Write(GetAllResponse);
-               // PrintResponse(GetAllResponse);
-
                 var creationResponse = Create(client, new {item = "carrot", check = false});
                 PrintResponse(creationResponse);
 
-                var id = GetString("id", creationResponse);
+                var id = GetString("id", creationResponse);//Read a doc
                 var readResponse = Read(client, id);
                 PrintResponse(readResponse);
 
-           /*    var rev1 = GetString("_rev", readResponse);
-                var updateResponse = Update(client, id, new {item = "", age = 36, _rev = rev1});
+               var rev1 = GetString("_rev", readResponse);//Update
+                var updateResponse = Update(client, id, new {item = "carrot", check = true, _rev = rev1});
                 PrintResponse(updateResponse);
                 
-                var rev2 = GetString("rev", updateResponse); 
+                var rev2 = GetString("rev", updateResponse); //Delete
                 var deleteResponse = Delete(client, id, rev2);
-                PrintResponse(deleteResponse);*/
+                PrintResponse(deleteResponse);
                 Console.Read();
             }
         }
@@ -64,10 +57,6 @@ namespace CloudantTest
             
 
         }
-
-
-
-
         private static HttpResponseMessage Create(HttpClient client, object doc)
         {
             var json = JsonConvert.SerializeObject(doc);
